@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/product.dart';
 import '../screens/product_detail_screen.dart';
+import '../provider/product.dart';
+import '../provider/cart.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -15,6 +16,9 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     //listen : false to get data from provider only once (we're not interested in updates)
+
+    final cart = Provider.of<Cart>(context, listen: false);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -46,7 +50,13 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
-            onPressed: () {},
+            onPressed: () {
+              cart.addItemm(
+                product.id,
+                product.price,
+                product.title,
+              );
+            },
           ),
           backgroundColor: Colors.black87,
           title: Text(
