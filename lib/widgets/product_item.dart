@@ -14,6 +14,8 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
+
     final product = Provider.of<Product>(context, listen: false);
     //listen : false to get data from provider only once (we're not interested in updates)
 
@@ -42,8 +44,19 @@ class ProductItem extends StatelessWidget {
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
               ),
               color: Theme.of(context).accentColor,
-              onPressed: () {
-                product.toggleFavoriteStatus();
+              onPressed: () async {
+                try {
+                  await product.toggleFavoriteStatus(product.id);
+                } catch (error) {
+                  scaffold.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Favorite failed",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }
               },
             ),
           ),
