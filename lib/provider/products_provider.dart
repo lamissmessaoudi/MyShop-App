@@ -9,14 +9,6 @@ import './product.dart';
 class Products with ChangeNotifier {
   List<Product> _items = [
     // Product(
-    //   id: 'p2',
-    //   title: 'Trousers',
-    //   description: 'A nice pair of trousers.',
-    //   price: 59.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    // ),
-    // Product(
     //   id: 'p3',
     //   title: 'Yellow Scarf',
     //   description: 'Warm and cozy - exactly what you need for the winter.',
@@ -51,10 +43,17 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndSetProduct() async {
     const url = 'https://flutter-update-3d404.firebaseio.com/products.json';
+
     try {
       final response = await http.get(url);
+
       final List<Product> loadedProducts = [];
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (extractedData == null) {
+        return;
+      }
+
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
@@ -65,6 +64,7 @@ class Products with ChangeNotifier {
           isFavorite: prodData['isFavorite'],
         ));
       });
+
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
@@ -74,6 +74,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     const url = 'https://flutter-update-3d404.firebaseio.com/products.json';
+
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -91,9 +92,11 @@ class Products with ChangeNotifier {
         imageUrl: product.imageUrl,
         id: json.decode(response.body)['name'],
       );
+
       _items.add(newProduct);
-      print(newProduct.id);
       notifyListeners();
+
+      print(newProduct.id);
     } catch (error) {
       print(error);
       throw error;
@@ -106,6 +109,7 @@ class Products with ChangeNotifier {
     if (prodIndex >= 0) {
       final url =
           'https://flutter-update-3d404.firebaseio.com/products/$id.json';
+
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -129,11 +133,13 @@ class Products with ChangeNotifier {
     notifyListeners();
 
     final response = await http.delete(url);
+
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException('Product cant be deleted');
     }
+
     existingProduct = null;
   }
 }
