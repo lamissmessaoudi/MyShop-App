@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../screens/product_detail_screen.dart';
 import '../provider/product.dart';
 import '../provider/cart.dart';
+import '../provider/auth.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -20,6 +21,7 @@ class ProductItem extends StatelessWidget {
     //listen : false to get data from provider only once (we're not interested in updates)
 
     final cart = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<Auth>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -46,7 +48,8 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).accentColor,
               onPressed: () async {
                 try {
-                  await product.toggleFavoriteStatus(product.id);
+                  await product.toggleFavoriteStatus(
+                      authData.token, authData.userId);
                 } catch (error) {
                   scaffold.showSnackBar(
                     SnackBar(
