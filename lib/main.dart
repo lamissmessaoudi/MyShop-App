@@ -13,6 +13,7 @@ import './provider/products_provider.dart';
 import './provider/cart.dart';
 import './provider/orders.dart';
 import './provider/auth.dart';
+import 'helpers/custom_page_transition.dart';
 
 void main() => runApp(MyApp());
 
@@ -50,10 +51,13 @@ class MyApp extends StatelessWidget {
           builder: (ctx, auth, _) => MaterialApp(
             title: 'MyShop',
             theme: ThemeData(
-              primarySwatch: Colors.purple,
-              accentColor: Colors.deepOrange,
-              fontFamily: 'Lato',
-            ),
+                primarySwatch: Colors.purple,
+                accentColor: Colors.deepOrange,
+                fontFamily: 'Lato',
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder()
+                })),
             home: auth.isAuth
                 ? ProductOverviewScreen()
                 : FutureBuilder(
