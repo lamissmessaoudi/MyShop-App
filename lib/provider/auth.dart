@@ -84,7 +84,7 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, 'verifyPassword');
   }
 
-  void logout() {
+  void logout() async {
     _token = null;
     _expiryDate = null;
     _userId = null;
@@ -93,6 +93,9 @@ class Auth with ChangeNotifier {
       _authTimer = null;
     }
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    // prefs.remove('userData');
+    prefs.clear();
   }
 
   void _autoLogout() {
