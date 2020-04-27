@@ -91,7 +91,7 @@ class Orders with ChangeNotifier {
           amount: orderData['amount'],
           dateTime: DateTime.parse(orderData['dateTime']),
           products: (orderData['products'] as List<dynamic>).map((item) {
-            CartItem(
+            return CartItem(
               id: item['id'],
               title: item['title'],
               quantity: item['quantity'],
